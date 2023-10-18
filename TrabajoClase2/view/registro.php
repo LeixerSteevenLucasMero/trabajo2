@@ -33,7 +33,7 @@
           </div>
         </div>
 
-        <div class="row">
+        <div class="row"> 
           <div class="form-group col">
             <label for="id_nivel" class="col-form-label">Nivel:</label>
             <select name="id_nivel" class="form-control" id="id_nivel">

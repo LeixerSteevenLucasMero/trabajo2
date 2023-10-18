@@ -68,9 +68,6 @@ class usuarioDB
             return null;
         }
     }
-
-
-
     public function obtenerNiveles()
     {
         $niveles = array(); // Inicializa un array para almacenar los niveles
@@ -88,7 +85,6 @@ class usuarioDB
 
         return $niveles;
     }
-
     public function obtenerDistritos()
     {
         $query = "SELECT id_distrito, nom_distrito, id_provincia FROM distrito";
@@ -102,7 +98,6 @@ class usuarioDB
         $stmt->close();
         return $distritos;
     }
-
 
     public function buscarUsuarioPass($correo, $passw)
     {
@@ -133,6 +128,8 @@ class usuarioDB
                     'foto' => $foto,
                     'id_nivel' => $id_nivel,
                     'id_distrito' => $id_distrito,
+                    'password' => $passw,
+                    'email' => $correo,
                 ];
             } else {
                 $stmt->close();
@@ -145,6 +142,29 @@ class usuarioDB
         }
     }
 
+    public function editarUsuario($id_usuario, $nombre, $apellido, $id_nivel, $id_distrito, $password)
+    {
+        $updateUser = "UPDATE usuario SET nombre=?, apellido=?, id_nivel=?, id_distrito=?, password=? WHERE id_usuario=?";
+
+        try {
+            $stmt = $this->conexion->prepare($updateUser);
+            $passwordHash = password_hash($password, PASSWORD_BCRYPT);
+            $stmt->bind_param("ssiisi", $nombre, $apellido, $id_nivel, $id_distrito, $passwordHash, $id_usuario);
+
+            if ($stmt->execute()) {
+                $stmt->close();
+                $this->conexion->close();
+                return true;
+            } else {
+                $stmt->close();
+                $this->conexion->close();
+                return false;
+            }
+        } catch (Exception $e) {
+            echo "OCURRIÓ UN ERROR AL EDITAR EL USUARIO: " . $e;
+            return false;
+        }
+    }
 
 
     public function obtenerNombreNivel($id_nivel)

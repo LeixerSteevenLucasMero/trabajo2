@@ -23,6 +23,10 @@ class Controller
       $nombreNivel = $this->user->obtenerNombreNivel($_SESSION["id_nivel"]);
       $id_distrito = $_SESSION["id_distrito"];
 
+      $niveles = $this->user->obtenerNiveles(); // Obtener los niveles desde el modelo
+      $distritos = $this->user->obtenerDistritos(); // Obtener los distritos desde el modelo
+
+
       // Obtener información de distrito y provincia
       $infoDistritoProvincia = $this->user->obtenerInfoDistritoProvincia($id_distrito);
 
@@ -64,8 +68,10 @@ class Controller
             $_SESSION["nombre"] = $user_data["nombre"];
             $_SESSION["apellido"] = $user_data["apellido"];
             $_SESSION["foto"] = $user_data["foto"];
+            $_SESSION["email"] = $correo;
             $_SESSION["id_nivel"] = $user_data["id_nivel"];
             $_SESSION["id_distrito"] = $user_data["id_distrito"];
+            $_SESSION["password"] = $user_data["password"]; // Agrega la contraseña hasheada a la sesión
             header("Location: /trabajoClase2/index.php?action=home");
          } else {
             // Usuario no encontrado, muestra un mensaje de error o redirige a la página de inicio de sesión
@@ -77,6 +83,34 @@ class Controller
       }
    }
 
+
+
+   public function editarUsuario()
+   {
+      if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+         if (isset($_POST["nombre"], $_POST["apellido"], $_POST["id_nivel"], $_POST["id_distrito"], $_POST["password"])) {
+            $id_usuario = $_SESSION["id_usuario"];
+            $nombre = $_POST["nombre"];
+            $apellido = $_POST["apellido"];
+            $id_nivel = (int)$_POST["id_nivel"];
+            $id_distrito = (int)$_POST["id_distrito"];
+            $password = $_POST["password"];
+            $result = $this->user->editarUsuario($id_usuario, $nombre, $apellido, $id_nivel, $id_distrito, $password);
+
+            if ($result === true) {
+               // Actualización exitosa, puedes redirigir a la página de inicio o realizar otras acciones
+               // echo $password;
+
+               header("Location: /trabajoClase2/index.php?action=cerrar");
+            } else {
+               // Error al actualizar, muestra un mensaje de error o redirige a una página de error
+               // echo "Error al actualizar el usuario. Por favor, inténtelo de nuevo.";
+            }
+         } else {
+            echo "Faltan campos requeridos para la edición.";
+         }
+      }
+   }
 
    public function registrar()
    {

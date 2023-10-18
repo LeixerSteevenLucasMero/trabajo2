@@ -1,6 +1,6 @@
 <?php
-require_once ("controller/controller.php");
-require_once ("model/usuario.php");
+require_once("controller/controller.php");
+require_once("model/usuario.php");
 
 $controller = new Controller();
 $usuario = new usuarioDB();
@@ -11,7 +11,7 @@ if (isset($_GET['action'])) {
         case 'mostrarRegistro':
             $controller->crearUsuario();
             break;
-        
+
         case 'registrarUsuario':
             $controller->registrar();
             break;
@@ -25,14 +25,14 @@ if (isset($_GET['action'])) {
         case 'home':
             $controller->home();
             break;
+        case 'editarUsuario':
+            $controller->editarUsuario();
+            break;
 
         default:
             $controller->index();
             break;
     }
-} 
-
-else {
+} else {
     $controller->index();
 }
-?>
